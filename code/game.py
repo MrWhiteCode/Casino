@@ -1,6 +1,8 @@
 import random
 import time
 
+win_casino = False
+
 #Ставки
 def get_bet(balance):
     while True:
@@ -98,7 +100,7 @@ def play_roulette(balance):
     return balance
 
 def play_fortuna(balance):
-    numbers = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 5, 5, 10, 10, 50]
+    numbers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 5, 5, 10, 10, 50]
     
     print("Добро пожаловать на Колесо Фортуны!")
     time.sleep(1)
@@ -137,22 +139,40 @@ def play_fortuna(balance):
 
 #Хаб казино
 def main():
+    global win_casino
     player_balance = 1000
     print("Добро пожаловать в казино Las-Vegas Text Casino! Желаем вам приятной игры!")
     time.sleep(1)
 
     while player_balance > 0:
+        # ПРОВЕРКА БАЛАНСА ВНУТРИ ЦИКЛА ХАБА
+        if player_balance >= 100_000 and not win_casino:
+            print("\nВы выиграли в казино! Желаете уйти с деньгами или продолжите на свой страх и риск?")
+            print("(Введите 'уйти' или 'остаться')")
+            otvet = input("").lower().strip()
+
+            if otvet == "уйти":
+                print(f"Вы уходите из казино богатым! Ваш финальный баланс: ${player_balance}")
+                return
+            elif otvet == "остаться":
+                print("Вы продолжаете играть на свой страх и риск...")
+                win_casino = True
+        
+        print(f"\nВаш текущий баланс: ${player_balance}")
         print("Выберите куда пойдете! \n1:Игровые Автоматы \n2:Рулетки \n3:Колесо Фортуны \n4:Уйти из казино")
         game = input("")
+        
         if game == '1':
             player_balance = play_slots(player_balance)
         elif game == '2':
             player_balance = play_roulette(player_balance)
         elif game == '3':
             player_balance = play_fortuna(player_balance)
+        elif game == '4':
+            print(f"Вы решили выйти сами. Вы уносите с собой: ${player_balance}")
+            break
 
     if player_balance <= 0:
         print("Вы банкрот! Охранники выкидывают вас на улицу.")
 
-
-main() #type: ignore
+main() 
